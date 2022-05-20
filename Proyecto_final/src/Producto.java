@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Producto {
+public class Producto implements Serializable{
 	
 	protected String nombre;
 	protected int id;
@@ -15,5 +16,53 @@ public class Producto {
 		this.categoria=categoria;
 		
 	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public String getCategoria() {
+		return categoria;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+
+	@Override
+	public String toString() {
+		return "Producto [nombre=" + nombre + ", id=" + id + ", precio=" + precio + ", cantidad=" + cantidad
+				+ ", categoria=" + categoria + "]";
+	}
+	
+	
 
 }
