@@ -1,48 +1,41 @@
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.BevelBorder;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.awt.event.ActionEvent;
 
-public class Ventana_Oficina {
+public class Oficina extends JFrame {
 
-	protected int port;
-	protected ServerSocket server;
-	private BufferedReader input;
-	private PrintStream output;
-	
-	protected static JFrame frm_oficina;
+	private JPanel contentPane;
 	private JTextField textField_nombre;
 	private JTextField textField_id;
 	private JTextField textField_precio;
 	private JTextField textField_cantidad;
 	private JTextField textField_categoria;
-	private JButton btnEnviarPedido;
-	private JLabel lblNombre;
-	private JLabel lblCantidad;
-	private JLabel lblPrecio;
-	private JLabel lblCantidad_1;
-	private JLabel lblCategoria;
 	
-	public Ventana_Oficina(int port,ServerSocket server,BufferedReader input,PrintStream output) {
-		this.port=port;
-		this.server=server;
-		this.input=input;
-		this.output=output;
-	}
+	protected final static int PORT = 5008;
+	protected final static String SERVER = "localhost";
+	protected ServerSocket server;
+	protected Socket client;
+	protected BufferedReader input;
+	protected PrintStream output;
+	protected JTextArea textArea;
+	
 
 	/**
 	 * Launch the application.
@@ -51,8 +44,8 @@ public class Ventana_Oficina {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Ventana_Oficina window = new Ventana_Oficina();
-					window.frm_oficina.setVisible(true);
+					Oficina frame = new Oficina();
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -61,27 +54,24 @@ public class Ventana_Oficina {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the frame.
 	 */
-	public Ventana_Oficina() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frm_oficina = new JFrame();
-		frm_oficina.setTitle("Stock Manager");
-		frm_oficina.setBounds(100, 100, 1280, 800);
-		// frm_oficina.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frm_oficina.getContentPane().setLayout(null);
+	public Oficina() {
+		
+		
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 1280, 800);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panel.setBounds(45, 38, 1173, 170);
-		frm_oficina.getContentPane().add(panel);
 		panel.setLayout(null);
+		panel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panel.setBounds(56, 86, 1173, 170);
+		contentPane.add(panel);
 		
 		JLabel lblAadirProducto = new JLabel("Añadir pedido:");
 		lblAadirProducto.setFont(new Font("Dialog", Font.BOLD, 20));
@@ -90,9 +80,9 @@ public class Ventana_Oficina {
 		
 		textField_nombre = new JTextField();
 		textField_nombre.setFont(new Font("Dialog", Font.PLAIN, 15));
+		textField_nombre.setColumns(10);
 		textField_nombre.setBounds(53, 99, 160, 28);
 		panel.add(textField_nombre);
-		textField_nombre.setColumns(10);
 		
 		textField_id = new JTextField();
 		textField_id.setFont(new Font("Dialog", Font.PLAIN, 15));
@@ -118,10 +108,12 @@ public class Ventana_Oficina {
 		textField_categoria.setBounds(814, 99, 160, 28);
 		panel.add(textField_categoria);
 		
-		btnEnviarPedido = new JButton("Enviar pedido");
+		
+		
+		JButton btnEnviarPedido = new JButton("Enviar pedido");
 		btnEnviarPedido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JPanel panel1 = new JPanel();
+				JPanel panel = new JPanel();
 				try {
 				if (textField_nombre.getText().equals(null)||textField_id.getText().equals(null)||textField_precio.getText().equals(null)||
 						textField_cantidad.getText().equals(null)||textField_categoria.getText().equals(null)) {
@@ -139,52 +131,54 @@ public class Ventana_Oficina {
 		
 					
 					JOptionPane.showMessageDialog(
-							panel1, "Pedido enviado con éxito!", "Pedido enviado",
+							panel, "Pedido enviado con éxito!", "Pedido enviado",
 						   	JOptionPane.PLAIN_MESSAGE);
 				}
 				}
 				catch(NumberFormatException ex){
-					JOptionPane.showMessageDialog(panel1,
+					JOptionPane.showMessageDialog(panel,
 							"Completa todos los campos, por favor.", "Warning",
 							JOptionPane.WARNING_MESSAGE);
 					
 				}
 			}
 		});
+			
 		btnEnviarPedido.setBounds(998, 99, 130, 27);
 		panel.add(btnEnviarPedido);
 		
-		lblNombre = new JLabel("Nombre:");
+		JLabel lblNombre = new JLabel("Nombre:");
 		lblNombre.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblNombre.setBounds(96, 57, 83, 17);
 		panel.add(lblNombre);
 		
-		lblCantidad = new JLabel("ID:");
+		JLabel lblCantidad = new JLabel("ID:");
 		lblCantidad.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblCantidad.setBounds(302, 57, 83, 17);
 		panel.add(lblCantidad);
 		
-		lblPrecio = new JLabel("Precio:");
+		JLabel lblPrecio = new JLabel("Precio:");
 		lblPrecio.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblPrecio.setBounds(473, 57, 83, 17);
 		panel.add(lblPrecio);
 		
-		lblCantidad_1 = new JLabel("Cantidad:");
+		JLabel lblCantidad_1 = new JLabel("Cantidad:");
 		lblCantidad_1.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblCantidad_1.setBounds(660, 57, 83, 17);
 		panel.add(lblCantidad_1);
 		
-		lblCategoria = new JLabel("Categoria:");
+		JLabel lblCategoria = new JLabel("Categoria:");
 		lblCategoria.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblCategoria.setBounds(857, 57, 83, 17);
 		panel.add(lblCategoria);
 		
 		JTextArea textArea = new JTextArea();
-		textArea.setBounds(44, 300, 1174, 343);
-		frm_oficina.getContentPane().add(textArea);
+		textArea.setBounds(55, 350, 1174, 343);
+		contentPane.add(textArea);
 		
 		JButton btnNewButton = new JButton("Ver Stock");
-		btnNewButton.setBounds(583, 686, 105, 27);
-		frm_oficina.getContentPane().add(btnNewButton);
+		
+		btnNewButton.setBounds(480, 728, 105, 27);
+		contentPane.add(btnNewButton);
 	}
 }

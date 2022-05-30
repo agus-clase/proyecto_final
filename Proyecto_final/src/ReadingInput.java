@@ -22,6 +22,7 @@ public class ReadingInput extends Thread {
 				
 				 try {
 					textArea.append(input.readLine());
+					System.out.println("ledo");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
