@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -57,6 +59,8 @@ public class Oficina extends JFrame {
 	 * Create the frame.
 	 */
 	public Oficina() {
+		
+	
 		
 		
 		
@@ -127,7 +131,8 @@ public class Oficina extends JFrame {
 					
 					//para enviar el objeto al cliente
 					String prueba=nuevo.getNombre();
-					output.print(prueba);
+					output.println(prueba);
+					System.out.println("enviado");
 		
 					
 					JOptionPane.showMessageDialog(
@@ -180,5 +185,20 @@ public class Oficina extends JFrame {
 		
 		btnNewButton.setBounds(480, 728, 105, 27);
 		contentPane.add(btnNewButton);
+		
+		try {
+			this.server = new ServerSocket(PORT);
+			this.client = server.accept();
+			// setSoLinger closes the socket giving 10mS to receive the remaining data
+			this.client.setSoLinger(true, 10);
+			this.input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			// to print data out
+			this.output = new PrintStream(client.getOutputStream());
+			ReadingInput t = new ReadingInput(input, textArea);
+			t.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -77,18 +77,10 @@ public class Ventana_Conexiones {
 					Oficina ofi=new Oficina();
 					ofi.setVisible(true);
 					
-					ofi.server = new ServerSocket(PORT);
-					ofi.client = server.accept();
-					// setSoLinger closes the socket giving 10mS to receive the remaining data
-					ofi.client.setSoLinger(true, 10);
-					input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-					// to print data out
-					output = new PrintStream(client.getOutputStream());
 					
 
 			
-					ReadingInput t = new ReadingInput(input, ofi.textArea);
-					t.start();
+				
 
 					
 				} catch (Exception e) {
@@ -102,27 +94,18 @@ public class Ventana_Conexiones {
 		JButton btnConectar_Almacen = new JButton("Conectar almacén");
 		btnConectar_Almacen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
+				
 				Almacen alm=new Almacen();
 				alm.setVisible(true);
-				alm.client = new Socket(SERVER, PORT);// open socket
-				// To read from the server
-
-				input = new BufferedReader(new InputStreamReader(client.getInputStream()));
-				// to write to the server
-				output = new PrintStream(client.getOutputStream());
+			
 		
-			ReadingInput t = new ReadingInput(input, alm.textArea2);
-				t.start();
+			
 				
 			
 				
 				
 				
-			}
-				catch (IOException ex) {
-					
-				}
+
 			}
 		});
 		btnConectar_Almacen.setBounds(351, 159, 141, 53);

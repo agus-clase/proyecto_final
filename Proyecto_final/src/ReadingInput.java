@@ -21,8 +21,8 @@ public class ReadingInput extends Thread {
 			while(true) {
 				
 				 try {
-					textArea.append(input.readLine());
-					System.out.println("ledo");
+										textArea.append(input.readLine());
+					System.out.println("leido");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

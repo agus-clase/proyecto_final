@@ -82,9 +82,9 @@ public class Ventana_Almacen {
 		JButton btn_actualizar = new JButton("Actualizar");
 		btn_actualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String p;
+				;
 				try {
-					p = input.readLine();
+					String p = input.readLine();
 					textArea2.append(p);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

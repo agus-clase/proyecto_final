@@ -7,12 +7,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Almacen extends JFrame {
 
@@ -47,6 +51,8 @@ public class Almacen extends JFrame {
 	 * Create the frame.
 	 */
 	public Almacen() {
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 380);
 		contentPane = new JPanel();
@@ -59,7 +65,7 @@ public class Almacen extends JFrame {
 		lblInformacinDelPedido.setBounds(152, 30, 258, 28);
 		contentPane.add(lblInformacinDelPedido);
 		
-		JTextArea textArea2 = new JTextArea();
+		textArea2 = new JTextArea();
 		textArea2.setBounds(42, 86, 505, 153);
 		contentPane.add(textArea2);
 		
@@ -72,7 +78,24 @@ public class Almacen extends JFrame {
 		contentPane.add(btnPedidoCancelado);
 		
 		JButton btn_actualizar = new JButton("Actualizar");
+		btn_actualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		btn_actualizar.setBounds(245, 266, 105, 27);
 		contentPane.add(btn_actualizar);
+		
+		try {
+			this.client = new Socket(SERVER, PORT);
+			this.input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			// to write to the server
+			this.output = new PrintStream(client.getOutputStream());
+			ReadingInput t2 = new ReadingInput(input, textArea2);
+			t2.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
