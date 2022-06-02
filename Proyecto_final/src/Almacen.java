@@ -6,9 +6,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -27,7 +30,9 @@ public class Almacen extends JFrame {
 	protected ServerSocket server;
 	protected Socket client;
 	protected BufferedReader input;
+	protected ObjectInputStream obj_input;
 	protected PrintStream output;
+	protected ObjectOutputStream obj_output;
 
 	protected JTextArea textArea2;
 
@@ -77,21 +82,23 @@ public class Almacen extends JFrame {
 		btnPedidoCancelado.setBounds(405, 251, 142, 57);
 		contentPane.add(btnPedidoCancelado);
 		
-		JButton btn_actualizar = new JButton("Actualizar");
-		btn_actualizar.addActionListener(new ActionListener() {
+		JButton btn_comprobar = new JButton("Comprobar Stock");
+		btn_comprobar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
 			}
 		});
-		btn_actualizar.setBounds(245, 266, 105, 27);
-		contentPane.add(btn_actualizar);
+		btn_comprobar.setBounds(208, 266, 173, 27);
+		contentPane.add(btn_comprobar);
 		
 		try {
 			this.client = new Socket(SERVER, PORT);
 			this.input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			obj_input=new ObjectInputStream( new BufferedInputStream(client.getInputStream()));
 			// to write to the server
 			this.output = new PrintStream(client.getOutputStream());
-			ReadingInput t2 = new ReadingInput(input, textArea2);
+			obj_output= new ObjectOutputStream(client.getOutputStream());
+			ReadingInput t2 = new ReadingInput(input, textArea2,obj_input);
 			t2.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

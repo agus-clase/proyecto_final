@@ -15,7 +15,11 @@ import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -35,7 +39,9 @@ public class Oficina extends JFrame {
 	protected ServerSocket server;
 	protected Socket client;
 	protected BufferedReader input;
-	protected PrintStream output;
+	protected ObjectInputStream obj_input;
+	protected OutputStream output;
+	protected ObjectOutputStream obj_output;
 	protected JTextArea textArea;
 	
 
@@ -131,13 +137,25 @@ public class Oficina extends JFrame {
 					
 					//para enviar el objeto al cliente
 					String prueba=nuevo.getNombre();
-					output.println(prueba);
+					try {
+						obj_output.writeObject(nuevo);
+						System.out.println("enviado");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					System.out.println("enviado");
 		
 					
 					JOptionPane.showMessageDialog(
 							panel, "Pedido enviado con éxito!", "Pedido enviado",
 						   	JOptionPane.PLAIN_MESSAGE);
+					
+					textField_nombre.setText("");
+					textField_id.setText("");
+					textField_precio.setText("");
+					textField_cantidad.setText("");
+					textField_categoria.setText("");
 				}
 				}
 				catch(NumberFormatException ex){
@@ -192,9 +210,11 @@ public class Oficina extends JFrame {
 			// setSoLinger closes the socket giving 10mS to receive the remaining data
 			this.client.setSoLinger(true, 10);
 			this.input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			obj_input= new ObjectInputStream(client.getInputStream());
 			// to print data out
 			this.output = new PrintStream(client.getOutputStream());
-			ReadingInput t = new ReadingInput(input, textArea);
+			obj_output= new ObjectOutputStream(client.getOutputStream());
+			ReadingInput t = new ReadingInput(input, textArea,obj_input);
 			t.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
